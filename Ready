@@ -1,1 +1,69 @@
+import pygame
+import sys
 
+# Initialize Pygame
+pygame.init()
+
+# Set up display
+width, height = 800, 600
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Hello Kitty Animation")
+
+# Load Hello Kitty images
+hello_kitty_images = [
+    pygame.image.load("hello_kitty1.png"),
+    pygame.image.load("hello_kitty2.png")
+]
+
+# Set initial position and velocity for Hello Kitty
+kitty_x, kitty_y = 100, 100
+velocity = 5
+
+# Set initial position and size for buttons
+button1_rect = pygame.Rect(50, 500, 100, 50)
+button2_rect = pygame.Rect(200, 500, 100, 50)
+
+# Main game loop
+clock = pygame.time.Clock()
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # Update Hello Kitty's position
+    kitty_x += velocity
+
+    # Check boundaries to bounce back
+    if kitty_x <= 0 or kitty_x >= width - hello_kitty_images[0].get_width():
+        velocity = -velocity
+
+    # Clear the screen
+    screen.fill((255, 255, 255))
+
+    # Display Hello Kitty
+    current_image = hello_kitty_images[int(pygame.time.get_ticks() / 500) % 2]
+    screen.blit(current_image, (kitty_x, kitty_y))
+
+    # Draw text on Hello Kitty
+    font = pygame.font.Font(None, 30)
+    text = font.render('Will you be my Valentine, hun?', True, (255, 0, 0))
+    screen.blit(text, (kitty_x + 50, kitty_y - 30))
+
+    # Draw buttons
+    pygame.draw.rect(screen, (0, 255, 0), button1_rect)
+    pygame.draw.rect(screen, (0, 0, 255), button2_rect)
+
+    # Draw text on buttons
+    font = pygame.font.Font(None, 36)
+    text1 = font.render('Yes', True, (255, 255, 255))
+    text2 = font.render('Yes', True, (255, 255, 255))
+    screen.blit(text1, (button1_rect.centerx - text1.get_width() // 2, button1_rect.centery - text1.get_height() // 2))
+    screen.blit(text2, (button2_rect.centerx - text2.get_width() // 2, button2_rect.centery - text2.get_height() // 2))
+
+    # Update the display
+    pygame.display.flip()
+
+    # Control the frame rate
+    clock.tick(60)
